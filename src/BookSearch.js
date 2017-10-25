@@ -130,21 +130,26 @@ class BookSearch extends Component {
 
         } else {
 
-          if(this.props.booksSelect) {
-            this.props.booksSelect.forEach( (book) => {
-                books = books.filter(item => item.id !== book.id);
-            } );
-        }
+          if (this.props.booksSelect) {
+            this.props.booksSelect.forEach((book) => {
+              books = books.map((item) => {
+                if (item.id === book.id) {
+                  item['shelf'] = book.shelf;
+                }
+                return item;
+              });
+            });
+          }
           this.setState({ booksSearch: books }, this.BooksAjustLis);
         }
       }).catch(erro => console.log(`Erro gerado:${erro}`));
     }
   }
 
-/**
- * Metodo responsavel por realizar a filtragem dos items que foram buscados,
- * em alguma categoria selecionada caso exista
- */
+  /**
+   * Metodo responsavel por realizar a filtragem dos items que foram buscados,
+   * em alguma categoria selecionada caso exista
+   */
   BooksAjustLis = () => {
 
     let lstBooksAjust = [];
@@ -220,7 +225,7 @@ class BookSearch extends Component {
           <ol className="books-grid"></ol>
           <ListBooks
             title='Books Researched'
-            lstBooks={this.state.books.filter((b) => !b.shelf || b.shelf === 'none')}
+            lstBooks={this.state.books}
             onSelectChangeBook={this.props.onSelectChangeBook}
           />
         </div>
